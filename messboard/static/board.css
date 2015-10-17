@@ -1,0 +1,10 @@
+div {
+	position:relative;
+	left:30%;
+}
+
+#readTime{
+	position:absolute;
+	right:5%;
+	top:5%;
+}

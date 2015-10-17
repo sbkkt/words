@@ -1,0 +1,33 @@
+#regtable {
+			width:600px ;
+			height:300px;
+			position:absolute;
+			left:25%;
+			top:10%
+	}
+	
+#logtable{
+			width:600px;
+			height:300px;
+			position:absolute;
+			left:25%;
+			top:20%;
+}
+
+table,th,td {
+			border:1px solid blue;
+			border-collapse:collapse;
+	}
+
+input:focus{
+			background-color:#ccc;
+	}
+
+textarea:focus{
+			background-color:#ccc;
+		}
+		
+#readTime {
+			position:absolute;
+			left:80%;
+	}

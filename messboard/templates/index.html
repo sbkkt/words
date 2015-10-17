@@ -1,0 +1,27 @@
+<!DOCPYTE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Welcome</title>
+	</head>
+	<body>
+		<div>
+		
+			<a href="board">留言</a>
+			<a href="login">登录</a>
+			<a href="register">注册</a>
+			<a href="loginout">注销</a>
+			{% for msg in get_messages() %}
+				{% if msg.tag == 'success' %}
+					<div>
+						{{ msg.txt }}
+					</div>
+				{% elif msg.tag == 'error' %}
+					<div>
+						{{ msg.txt }}
+					</div>
+				{% end %}
+			{% end %}	
+		</div>
+	</body>
+</html>

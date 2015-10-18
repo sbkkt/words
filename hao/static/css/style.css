@@ -1,0 +1,52 @@
+
+.container {
+    margin-top: 10px;
+}
+
+.ui-green {
+    color: green;
+}
+
+.ui-red {
+    color: red;
+}
+
+div {
+	position:relative;
+	left:30%;
+}
+
+#readTime{
+	position:absolute;
+	right:5%;
+	top:5%;
+}
+#regtable {
+			width:600px ;
+			height:300px;
+			position:absolute;
+			right:60%;
+			top:100px;
+	}
+	
+#logtable{
+			width:600px;
+			height:300px;
+			position:absolute;
+			right:90%;
+			top:100px;
+}
+
+table,th,td {
+			border:1px solid blue;
+			border-collapse:collapse;
+	}
+
+input:focus{
+			background-color:#ccc;
+	}
+
+textarea:focus{
+			background-color:#ccc;
+		}
+

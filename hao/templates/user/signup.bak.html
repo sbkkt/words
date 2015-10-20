@@ -1,0 +1,38 @@
+
+{% extends "../base.html" %}
+
+{% block body %}
+	
+<div class="container">
+	<div id="readTime">
+		
+	</div>
+	
+	<form name="register" action="signup" onsubmit="return validate_form(this)" method="post">
+	{%raw xsrf_token%}
+			<table id="regtable">
+				<tr>
+					<th align="center" colspan="3">注册</th>
+				</tr>
+				<tr>
+					<th>用户名:</th><td colspan="2"><input type="text" name="username" />&nbsp <font color="red">* 尽量使用中文名</font></td>
+				</tr>
+				<tr>
+					<th>密码:</th><td colspan="2"><input type="password" name="pwd1" />&nbsp <font color="red">*</font></td>
+				</tr>
+				<tr>
+					<th>确认密码:</th><td colspan="2"><input type="password" name="pwd2" />&nbsp <font color="red">*</font></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td>
+					<input type="submit" name="submit" value="OK" /> &nbsp;&nbsp;
+					<input type="reset" name="reset" value="重置" />
+					</td>
+					<th><a href="signin">登录</a></th>
+				</tr>
+			</table>
+	</form>
+	
+</div>
+{% end %}

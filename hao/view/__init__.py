@@ -123,61 +123,65 @@ class Messages(object):
 
 
 class View(tornado.web.RequestHandler):
-    def render(self, fn=None, **kwargs):
-        if not fn:
-            fn = ('/%s/%s.html' % (
-                '/'.join(self.__module__.split('.')[1:-1]), 
-                self.__class__.__name__.lower()
-            )).replace(r'//', r'/')
+	def get_current_user(self):
+		user_key = self.get_secure_cookie('u')
+		return User.get_by_key(user_key)
 
-        kwargs.update({
-            'req': self,
-            'static': self.static_url,
-            'url_for': self.reverse_url,
-            'get_messages': self.get_messages,
-            'xsrf_token': self.xsrf_form_html(),
-            'csrf_token': self.xsrf_form_html(),
-        })
+	def render(self, fn=None, **kwargs):
+		if not fn:
+			fn = ('/%s/%s.html' % (
+				'/'.join(self.__module__.split('.')[1:-1]), 
+				self.__class__.__name__.lower()
+		)).replace(r'//', r'/')
 
-        if lookup:
-            tmpl = lookup.get_template(fn)
-            self.finish(tmpl.render(**kwargs))
-        else:
-            if fn.startswith('/'):
-                fn = '.' + fn
-            super(View, self).render(fn, config=config, **kwargs)
+		kwargs.update({
+		'req': self,
+			'static': self.static_url,
+			'url_for': self.reverse_url,
+			'get_messages': self.get_messages,
+			'xsrf_token': self.xsrf_form_html(),
+			'csrf_token': self.xsrf_form_html(),
+		})
 
-    def get_messages(self):
-        msg_lst = self.messages.messages + (self.session['_messages'] or [])
-        _messages = []
+		if lookup:
+			tmpl = lookup.get_template(fn)
+			self.finish(tmpl.render(**kwargs))
+		else:
+			if fn.startswith('/'):
+				fn = '.' + fn
+		super(View, self).render(fn, config=config, **kwargs)
 
-        for i in msg_lst:
-            tag, txt = i
-            try: txt = txt.decode('utf-8') # 为py2做个转换
-            except: pass
-            _messages.append(JsDict(tag=Messages.DEFAULT_TAGS[tag], txt=txt))
+	def get_messages(self):
+		msg_lst = self.messages.messages + (self.session['_messages'] or [])
+		_messages = []
 
-        self.messages.messages = []
-        return _messages
+		for i in msg_lst:
+			tag, txt = i
+			try: txt = txt.decode('utf-8') # 为py2做个转换
+			except: pass
+			_messages.append(JsDict(tag=Messages.DEFAULT_TAGS[tag], txt=txt))
 
-    def initialize(self):
-        self.messages = Messages()
-        self.session = SimpleSession(self)
-        super(View, self).initialize()
+		self.messages.messages = []
+		return _messages
 
-    def flush(self, include_footers=False, callback=None):
-        self.session['_messages'] = self.messages.messages
-        self.session.flush()
-        super(View, self).flush(include_footers, callback)
+	def initialize(self):
+		self.messages = Messages()
+		self.session = SimpleSession(self)
+		super(View, self).initialize()
 
-    def current_user(self):
-        key = self.get_secure_cookie('u')
-        return User.get_by_key(key)
+	def flush(self, include_footers=False, callback=None):
+		self.session['_messages'] = self.messages.messages
+		self.session.flush()
+		super(View, self).flush(include_footers, callback)
 
-    def is_admin(self):
-        user = self.current_user()
-        if user and user.is_admin():
-            return user
+	def current_user(self):
+		key = self.get_secure_cookie('u')
+		return User.get_by_key(key)
+
+	def is_admin(self):
+		user = self.current_user()
+		if user and user.is_admin():
+			return user
 
 
 class AjaxView(View):

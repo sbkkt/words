@@ -11,9 +11,35 @@
     color: red;
 }
 
-div {
+
+
+#first {
+	position:float;
+}
+
+#signin{
+	position:absolute;
+	right:500px;
+}
+
+#signup{
+	position:absolute;
+	right:500px;
+}
+
+#get_words{
+	position:float;
+	
+}
+
+#post_words{
 	position:relative;
-	left:30%;
+	left:100px;
+}
+
+#find{
+	position:relative;
+
 }
 
 #readTime{
@@ -22,7 +48,7 @@ div {
 	top:5%;
 }
 #regtable {
-			width:600px ;
+			width:500px ;
 			height:300px;
 			position:absolute;
 			right:60%;

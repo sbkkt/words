@@ -1,38 +1,37 @@
+<%inherit file="../base.html" />
 
-{% extends "../base.html" %}
-
-{% block body %}
-	<div id="readTime">
-		
-	</div>
 <div class="container">
-	
-	
-	<form name="register" action="signup" onsubmit="return validate_form(this)" method="post">
-	{%raw xsrf_token%}
-			<table id="regtable">
-				<tr>
-					<th align="center" colspan="3">注册</th>
-				</tr>
-				<tr>
-					<th>用户名:</th><td colspan="2"><input type="text" name="username" />&nbsp <font color="red">* 尽量使用中文名</font></td>
-				</tr>
-				<tr>
-					<th>密码:</th><td colspan="2"><input type="password" name="pwd1" />&nbsp <font color="red">*</font></td>
-				</tr>
-				<tr>
-					<th>确认密码:</th><td colspan="2"><input type="password" name="pwd2" />&nbsp <font color="red">*</font></td>
-				</tr>
-				<tr>
-					<th></th>
-					<td>
-					<input type="submit" name="submit" value="OK" /> &nbsp;&nbsp;
-					<input type="reset" name="reset" value="重置" />
-					</td>
-					<th><a href="signin">登录</a></th>
-				</tr>
-			</table>
+
+	<div id="signup">
+	<form class="form-horizontal" role="form" id="register" action="signup" onsubmit="return validate_form(this)" method="post">
+	${xsrf_token}
+		<div class="form-group">
+			<label for="username" class="col-sm-2 control-label">用户名:</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" name="username" 
+					placeholder="请输入用户名">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="password" class="col-sm-2 control-label">密码:</label>
+			<div class="col-sm-10">
+				<input type="password" class="form-control" name="pwd1" 
+					placeholder="请输入密码">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="password" class="col-sm-2 control-label">确认密码:</label>
+			<div class="col-sm-10">
+				<input type="password" class="form-control" name="pwd2" 
+					placeholder="请输入密码">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">注册</button>
+			</div>
+		</div>
 	</form>
+	</div>
 	
 </div>
-{% end %}

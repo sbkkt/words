@@ -1,0 +1,66 @@
+﻿{% extends "base.html" %}
+{% block head %}
+	<style type="text/css">
+		table,th,td {
+			border:0;
+			
+	}
+
+	</style>
+{% end %}
+{% block body %}
+		<h4 id="readTime" ></h4>
+
+		<div>
+			<table>
+				<tr>
+					<th>用户</th><th>:</th><th>留言</th>
+				</tr>
+				{% if words_query %}
+					{% for word in words_query %}
+					<tr>
+						<th> {{ word.username }} </th>
+						<th>:</th>
+						<th> {{ word.words }} </th>
+						<th>:</th>
+						<th> {{ word.str_time }} </th>
+						<th><input id="{{ word.key }}" type="button" value="删除" onclick="delewords(this)" /></th>
+					</tr>
+					{% end %}
+				{% end %}
+					
+			</table>
+		</div>
+		<div>
+			<form id="wordsform" action="board" method="post">
+			{% raw xsrf_token %}
+				<textarea name="words" rows="3" value=""></textarea><br />
+				<input type="submit" name="submit" value="OK">
+			</form>
+		</div>
+		
+		<div>
+			{% if find_words_query %}
+				{% for word in find_words_query %}
+					<tr>
+						<th> {{ word.username }} </th>
+						<th>:</th>
+						<th> {{ word.words }} </th>
+						<th>:</th>
+						<th> {{ word.history_time }} </th>
+						<th><input id="{{word.history_time}}" type="button" value="删除" onclick="delewords(this)"/></th>
+					</tr>
+				{% end %}
+			{% end %}
+		</div>
+		<div>
+			<form id="find_words_form" action="board" method="post">
+			{% raw xsrf_token %}
+				<label>模糊查询:<input type="text" name="find_words" value="" /></label>
+				<br/>
+				&nbsp;&nbsp;&nbsp;
+				<input type="submit" name="find" value="查询">
+			</form>
+			<br/>
+		</div>
+{% end %}

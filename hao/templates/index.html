@@ -1,20 +1,9 @@
-﻿
-{% extends "base.html" %}
+<%inherit file="base.html"/>
 
-{% block head %}
-
-{% end %}
-
-{% block body %}
 <div class="container">
-    <p><a href="{{ url_for('board') }}">留言</a></p>
+	<div class="page-header">
+		<h1>Welcome!
+			<small>赶紧去留言吧！</small>
+		</h1>
+	</div>
 </div>
-{% end %}
-
-{% block script %}
-<script>
-    (function() {
-        ;
-	})();
-</script>
-{% end %}

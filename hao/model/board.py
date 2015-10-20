@@ -19,15 +19,16 @@ class Board(BaseModel):
 	words = TextField(index = True)
 	key = TextField(index = True)
 	history_time = DateTimeField(index = True)
+	IP = TextField(index = True)
 	class Meta:
 		db_table = "words"
 		
 	# 将留言存入数据库
 	@classmethod
-	def new(cls, username, words):
+	def new(cls, username, words ,IP):
 		the_time = time.time()
 		key = random_str(32)
-		return cls.create(username=username, words=words, history_time=the_time, key = key)
+		return cls.create(username=username, words=words, history_time=the_time, key=key, IP=IP)
 		
 	# 显示所有留言
 	@classmethod

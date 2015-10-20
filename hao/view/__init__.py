@@ -135,7 +135,7 @@ class View(tornado.web.RequestHandler):
 		)).replace(r'//', r'/')
 
 		kwargs.update({
-		'req': self,
+			'req': self,
 			'static': self.static_url,
 			'url_for': self.reverse_url,
 			'get_messages': self.get_messages,
@@ -202,6 +202,19 @@ class NoLoginView(View):
             self.messages.error("您已登陆，请先退出")
             self.redirect(url_for('index'))
 
+#处理错误页面
+class RequestHandler(tornado.web.RequestHandler):
+	def write_error(self, status_code, **kwargs):
+		if status_code == 404:
+			self.render('404.html')
+		elif status_code == 500:
+			self.render('500.html')
+		else:
+			super(RequestHandler, self).write_error(status_code, **kwargs)
+			
+class PageNotFoundHandler(RequestHandler):
+	def get(self):
+		raise tornado.web.HTTPError(404)
 
 # sugar
 def url_for(name, *args):

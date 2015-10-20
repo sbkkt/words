@@ -24,7 +24,7 @@ class BoardView(LoginView):
 		find_words = self.get_argument('find_words','') #模糊查询的字符串
 		dele_by_key = self.get_argument('dele_by_key','') #删除键所上传的，所需删除的留言的时间
 		words_query = Board.get_all() #获取所有留言
-		
+		IP = self.request.remote_ip
 		#history_time = time.strftime('%Y-%m-%d %X', time.localtime()) #获取当前时间，与用户留言一起存入数据库
 		#user_key = self.get_secure_cookie('u')
 		#User.get_by_key(user_key) #凭key找到当前用户
@@ -36,7 +36,7 @@ class BoardView(LoginView):
 			find_words_query = []
 		if words :
 			username = user.username
-			Board.new(username, words)
+			Board.new(username, words, IP)
 		if dele_by_key :
 			if user.is_admin():#如果不是admin用户将无法删除
 				Board.dele_by_key(dele_by_key)

@@ -5,7 +5,6 @@
 %>
 <%block name="head">
 </%block>
-
 <div class="container">
 		% if words_query :
 			<table class="table table-hover">
@@ -17,8 +16,8 @@
 				<tbody>
 				% for word in words_query :
 				<tr>
-					<td> ${ word.username } </td>
-					<td> ${ word.words } </td>
+					<td> ${ word.username|h} </td>
+					<td> ${ word.words|h } </td>
 					<%str_time= time.strftime('%Y-%m-%d %X',time.localtime(word.history_time))%>
 					<td>${str_time}</td>
 					<td><input class="btn btn-danger" id="${ word.key }" type="button" value="删除" onclick="delewords(this)" /></td>

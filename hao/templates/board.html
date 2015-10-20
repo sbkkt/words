@@ -21,7 +21,7 @@
 					<td> ${ word.words } </td>
 					<%str_time= time.strftime('%Y-%m-%d %X',time.localtime(word.history_time))%>
 					<td>${str_time}</td>
-					<td><input id="${ word.key }" type="button" value="删除" onclick="delewords(this)" /></td>
+					<td><input class="btn btn-danger" id="${ word.key }" type="button" value="删除" onclick="delewords(this)" /></td>
 				</tr>
 				% endfor
 				</tbody>
@@ -56,7 +56,7 @@
 					<td> ${ word.words } </td>
 					<%str_time= time.strftime('%Y-%m-%d %X',time.localtime(word.history_time))%>
 					<td>${str_time}</td>
-					<td><input id="${ word.key }" type="button" value="删除" onclick="delewords(this)" /></td>
+					<td><input class="btn btn-danger" id="${ word.key }" type="button" value="删除" onclick="delewords(this)" /></td>
 				</tr>
 				% endfor
 				</tbody>

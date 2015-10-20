@@ -14,7 +14,7 @@ class BoardView(LoginView):
 		self.render(
 			'board.html',
 			words_query = words_query,
-			find_words_query = [] #此处不赋值为空，将报错未定义变量
+			find_words_query = '' #此处不赋值为空，将报错未定义变量
 			
 			)
 			
@@ -40,6 +40,7 @@ class BoardView(LoginView):
 		if dele_by_key :
 			if user.is_admin():#如果不是admin用户将无法删除
 				Board.dele_by_key(dele_by_key)
+				self.messages.success("删除成功！")
 			else:
 				self.messages.error("您没有删除权限！")
 			

@@ -29,14 +29,16 @@ class BoardView(LoginView):
 		#user_key = self.get_secure_cookie('u')
 		#User.get_by_key(user_key) #凭key找到当前用户
 		
-		user = self.get_current_user()
+		user = self.current_user()
 		if find_words :#模糊查询
 			find_words_query = Board.get_by_words(find_words)
+			self.messages.success("查询成功！")
 		else:
 			find_words_query = []
 		if words :
 			username = user.username
 			Board.new(username, words, IP)
+			self.messages.success("留言成功！")
 		if dele_by_key :
 			if user.is_admin():#如果不是admin用户将无法删除
 				Board.dele_by_key(dele_by_key)

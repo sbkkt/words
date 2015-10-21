@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <% 
 	import config
-	user = req.current_user() 
+	user = req.current_user()
+	messages = get_messages() 
 %>
 <html>
 <head>
@@ -9,7 +10,7 @@
 	<meta charset='utf-8'>
 	<script src="${static('js/main.js')}"></script>
 	<script src="${static('bootstrap/js/bootstrap.min.js')}"></script>
-	<link href="${static('bootstrap/css/bootstrap.min.css')}" rel="stylesheet" >
+	<link href="${static('bootstrap/css/bootstrap.min.css')}" rel="stylesheet" />
 	<%block name="head" />
 </head>
 <body>
@@ -18,9 +19,9 @@
 				<div class="container-fluid">
 					<div class="pull-right">
 						<ul class="nav nav-pills">
-							<li class="active"><a href="${url_for('index')}">Home</a></li>
+							<li><a href="${url_for('index')}">Home</a></li>
 							<li><a href="${url_for('signout')}">SignOut</a></li>
-							<li><a href="${ url_for('board') }">LeaveMessages</a></li>
+							<li><a href="${url_for('board')}">LeaveMessages</a></li>
 						</ul>
 					</div>
 				</div>
@@ -39,19 +40,22 @@
 				</div>
 			</nav>
 		% endif
-	
-	
-	% for msg in get_messages() :
-		% if msg.tag == 'success' :
-			<div class="alert alert-success">
-                ${ msg.txt }
-            </div>
-		% elif msg.tag == 'error' :
-			<div class="alert alert-warning">
-                ${ msg.txt }
-            </div>
-		% endif
-	% endfor
+	% if messages:
+		% for msg in messages :
+			% if msg.tag == 'success' :
+				<div class="alert alert-success">
+					${ msg.txt }
+				</div>
+			% elif msg.tag == 'error' :
+				<div class="alert alert-warning">
+					${ msg.txt }
+				</div>
+			% endif
+		% endfor
+		
+	% endif
+
+		
 	${self.body()}
 	<%block name="script" />
 </body>

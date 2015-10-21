@@ -1,4 +1,4 @@
-addLoadEvent(startTime)
+
 
 function startTime(){
 					var today = new Date();

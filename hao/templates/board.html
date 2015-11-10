@@ -1,12 +1,9 @@
 <%inherit file="base.html" />
 
-<%
-	import time
-%>
 <%block name="head">
 </%block>
 <style>
-	form{
+	div.row{
 		margin-bottom:10px;
 	}
 </style>
@@ -15,17 +12,18 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>用户:</th><th>留言</th><th>时间</th>
+						<th></th><th>用户</th><th>留言</th><th>时间</th>
 					</tr>
 				</thead>
 				<tbody>
 				% for word in words_query :
 				<tr>
+					<td> ${ word.id|h} </td>
 					<td> ${ word.username|h} </td>
 					<td> ${ word.words|h } </td>
 					<%str_time= time.strftime('%Y-%m-%d %X',time.localtime(word.history_time))%>
 					<td>${str_time}</td>
-					<td><input class="btn btn-danger" id="${ word.key }" type="button" value="删除" onclick="delewords(this)" /></td>
+					<td><input class="btn btn-danger" id="${ word.id }" type="button" value="删除" onclick="delewords(this)" /></td>
 				</tr>
 				% endfor
 				</tbody>
@@ -45,29 +43,29 @@
 					</div><!-- /input-group -->
 				</div><!-- /.col-lg-6 -->
 			</div><!-- /.row -->
-		</form>
+
 		% if find_words_query :
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>用户:</th><th>留言</th><th>时间</th>
+						<th></th><th>用户:</th><th>留言</th><th>时间</th>
 					</tr>
 				</thead>
 				<tbody>
 				% for word in find_words_query :
 				<tr>
+					<td> ${ word.id } </td>
 					<td> ${ word.username } </td>
 					<td> ${ word.words } </td>
 					<%str_time= time.strftime('%Y-%m-%d %X',time.localtime(word.history_time))%>
 					<td>${str_time}</td>
-					<td><input class="btn btn-danger" id="${ word.key }" type="button" value="删除" onclick="delewords(this)" /></td>
+					<td><input class="btn btn-danger" id="${ word.id }" type="button" value="删除" onclick="delewords(this)" /></td>
 				</tr>
 				% endfor
 				</tbody>
 			</table>
 		% endif
-		<form id="find_words_form" action="board" method="post">
-		${xsrf_token}
+		<!--form id="find_words_form" action="board" method="post"-->
 			<div class="row">
 				<div class="col-lg-6">
 					<div class="input-group">
@@ -79,7 +77,6 @@
 				</div><!-- /.col-lg-6 -->
 			</div><!-- /.row -->
 		</form>
-		<br/>
 </div>
 <%block name="script">
 <script>

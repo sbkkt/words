@@ -3,6 +3,8 @@
 import json
 import random
 import string
+
+import time
 import tornado.web
 import config
 from lib.jsdict import JsDict
@@ -17,6 +19,7 @@ class Route(object):
         def _(cls):
             self.urls.append(tornado.web.URLSpec(url, cls, name=name))
             return cls
+
         return _
 
 
@@ -28,9 +31,9 @@ def get_lookup_mako():
     import mako.lookup
 
     _lookup = mako.lookup.TemplateLookup(
-            directories=['./templates'],
-            module_directory='/tmp/mako' + ''.join(random.sample(string.ascii_letters + string.digits, 8)),
-            input_encoding='utf-8',
+        directories=['./templates'],
+        module_directory='/tmp/mako' + ''.join(random.sample(string.ascii_letters + string.digits, 8)),
+        input_encoding='utf-8',
     )
     return _lookup
 
@@ -43,10 +46,11 @@ def get_lookup_jinja2(_globals={}, extensions=[]):
         extensions=extensions
     )
     # mako 没有全局变量特性，这里为了一致性 jinjia 向 mako 妥协
-    #_lookup.globals['url_for'] = url_for
+    # _lookup.globals['url_for'] = url_for
     _lookup.globals['config'] = config
     _lookup.globals.update(_globals)
     return _lookup
+
 
 if config.TEMPLATE == 'mako':
     lookup = get_lookup_mako()
@@ -73,8 +77,10 @@ class SimpleSession(object):
 
     def load(self):
         _s = self._request.get_secure_cookie('session') or '{}'
-        try: _s = _s.decode('utf-8') # fix:py2
-        except: pass
+        try:
+            _s = _s.decode('utf-8')  # fix:py2
+        except:
+            pass
         return json.loads(_s)
 
     def flush(self):
@@ -83,7 +89,6 @@ class SimpleSession(object):
 
 # 消息闪现支持
 class Messages(object):
-
     MESSAGE_LEVEL = JsDict(
         DEBUG=10,
         INFO=20,
@@ -123,82 +128,85 @@ class Messages(object):
 
 
 class View(tornado.web.RequestHandler):
-	def render(self, fn=None, **kwargs):
-		if not fn:
-			fn = ('/%s/%s.html' % (
-				'/'.join(self.__module__.split('.')[1:-1]), 
-				self.__class__.__name__.lower()
-			)).replace(r'//', r'/')
+    def render(self, fn=None, **kwargs):
+        if not fn:
+            fn = ('/%s/%s.html' % (
+                '/'.join(self.__module__.split('.')[1:-1]),
+                self.__class__.__name__.lower()
+            )).replace(r'//', r'/')
 
-		kwargs.update({
-			'req': self,
-			'static': self.static_url,
-			'url_for': self.reverse_url,
-			'get_messages': self.get_messages,
-			'xsrf_token': self.xsrf_form_html(),
-			'csrf_token': self.xsrf_form_html(),
-		})
+        kwargs.update({
+            'req': self,
+            'static': self.static_url,
+            'time':time,
+            'url_for': self.reverse_url,
+            'get_messages': self.get_messages,
+            'xsrf_token': self.xsrf_form_html(),
+            'csrf_token': self.xsrf_form_html(),
+        })
 
-		if lookup:
-			tmpl = lookup.get_template(fn)
-			self.finish(tmpl.render(**kwargs))
-		else:
-			if fn.startswith('/'):
-				fn = '.' + fn
-			super(View, self).render(fn, config=config, **kwargs)
+        if lookup:
+            tmpl = lookup.get_template(fn)
+            self.finish(tmpl.render(**kwargs))
+        else:
+            if fn.startswith('/'):
+                fn = '.' + fn
+            super(View, self).render(fn, config=config, **kwargs)
 
-	def get_messages(self):
-		msg_lst = self.messages.messages + (self.session['_messages'] or [])
-		_messages = []
+    def get_messages(self):
+        msg_lst = self.messages.messages + (self.session['_messages'] or [])
+        _messages = []
 
-		for i in msg_lst:
-			tag, txt = i
-			try: txt = txt.decode('utf-8') # 为py2做个转换
-			except: pass
-			_messages.append(JsDict(tag=Messages.DEFAULT_TAGS[tag], txt=txt))
+        for i in msg_lst:
+            tag, txt = i
+            try:
+                txt = txt.decode('utf-8')  # 为py2做个转换
+            except:
+                pass
+            _messages.append(JsDict(tag=Messages.DEFAULT_TAGS[tag], txt=txt))
 
-		self.messages.messages = []
-		return _messages
+        self.messages.messages = []
+        return _messages
 
-	def initialize(self):
-		self.messages = Messages()
-		self.session = SimpleSession(self)
-		super(View, self).initialize()
+    def initialize(self):
+        self.messages = Messages()
+        self.session = SimpleSession(self)
+        super(View, self).initialize()
 
-	def flush(self, include_footers=False, callback=None):
-		self.session['_messages'] = self.messages.messages
-		self.session.flush()
-		super(View, self).flush(include_footers, callback)
+    def flush(self, include_footers=False, callback=None):
+        self.session['_messages'] = self.messages.messages
+        self.session.flush()
+        super(View, self).flush(include_footers, callback)
 
-	def current_user(self):
-		key = self.get_secure_cookie('u')
-		return User.get_by_key(key)
+    def current_user(self):
+        key = self.get_secure_cookie('u')
+        return User.get_by_key(key)
 
-	def is_admin(self):
-		user = self.current_user()
-		if user and user.is_admin():
-			return user
+    def is_admin(self):
+        user = self.current_user()
+        if user and user.is_admin():
+            return user
 
 
 class AjaxView(View):
-	def check_xsrf_cookie(self):
-		# useless for json request
-		pass
+    def check_xsrf_cookie(self):
+        # useless for json request
+        pass
 
 
 class LoginView(View):
-	def prepare(self):
-		if not self.current_user():
-			self.redirect(url_for('signin'))
+    def prepare(self):
+        if not self.current_user():
+            self.redirect(url_for('signin'))
 
 
 class NoLoginView(View):
-	def prepare(self):
-		if self.current_user():
-			self.messages.error("您已登陆，请先退出")
-			self.redirect(url_for('index'))
+    def prepare(self):
+        if self.current_user():
+            self.messages.error("您已登陆，请先退出")
+            self.redirect(url_for('index'))
+
 
 # sugar
 def url_for(name, *args):
-	return config.app.reverse_url(name, *args)
-
+    return config.app.reverse_url(name, *args)

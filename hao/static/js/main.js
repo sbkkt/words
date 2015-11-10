@@ -12,11 +12,11 @@ function delewords(thiswords){
 		var myForm = document.createElement("form");
 		myForm.method = "post";
 		myForm.action = "board";
-		var dele_by_key = thiswords.id;
+		var dele_by_id = thiswords.id;
 		var myInput = document.createElement("input");
 		myInput.type = "text";
-		myInput.name = "dele_by_key";
-		myInput.value = dele_by_key;
+		myInput.name = "dele_by_id";
+		myInput.value = dele_by_id;
 		myForm.appendChild(myInput);
 		document.body.appendChild(myForm);
 		myForm.submit();
